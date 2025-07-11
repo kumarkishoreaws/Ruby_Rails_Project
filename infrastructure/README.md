@@ -21,11 +21,11 @@ This folder contains Terraform code to deploy the Ruby on Rails (RoR) applicatio
 ##  Prerequisites
 
 Make sure the following tools are installed and configured:
-
+<pre>
 1.AWS CLI (`aws configure`)
 2. Terraform 
 3. Docker (for building and pushing app/Nginx images to ECR)
-
+</pre>
 
 
 
