@@ -37,10 +37,6 @@ Make sure the following tools are installed and configured:
 4 .Git (for code versioning)
 
 
-
-
-
-
  Deployment Steps
 
  Go to the infrastructure directory:
@@ -51,10 +47,6 @@ Make sure the following tools are installed and configured:
    terraform validate
    terraform plan
    terraform apply
-
-
-
-
 
 
 Configuration – terraform.tfvars
@@ -72,9 +64,6 @@ db_name     = "rorappdb"
 db_username = "roruser"
 db_password = "rorKisho312"
 These variables are customizable. Everything else (like ALB DNS, RDS endpoint, etc.) will be automatically created by Terraform and printed as output after successful deployment.
-
-
-
 
 
 
