@@ -119,3 +119,14 @@ IAM roles are used for S3 access. No static access keys or secrets are used.
 
 Docker images should be built and pushed to AWS ECR before running terraform apply.
 
+
+
+### ⚠️ Terraform Backend Notice
+
+Hey! Just a quick heads-up — I’ve used my own private S3 bucket as the backend to store Terraform state, and it's already set up in the main.tf file.
+
+Since the bucket is private and only accessible to my account, if you're cloning this repo and trying to apply the infrastructure on your own AWS account, just skip the backend by running:
+
+<pre>
+terraform init -backend=false
+</pre>
