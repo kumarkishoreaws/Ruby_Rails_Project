@@ -1,33 +1,24 @@
-Infrastructure Setup – Ruby on Rails App Deployment using Terraform on AWS
+# Infrastructure Setup – Ruby on Rails App Deployment using Terraform on AWS
 
 This folder contains Terraform code to deploy the Ruby on Rails (RoR) application in AWS using ECS Fargate, Nginx as a reverse proxy, RDS for PostgreSQL, and S3 for file storage. The infrastructure is built following security best practices with private networking and IAM roles — fully automated using Terraform.
 
+---
 
+## 📦 What This Setup Provisions
 
-What This Setup Does
+1. A custom VPC with public and private subnets across two AZs  
+2. ECS Cluster with Fargate tasks running two containers:  
+   - **Rails app container** (port 3000)  
+   - **Nginx container** as reverse proxy (port 80)  
+3. Application Load Balancer (ALB) in public subnet  
+4. RDS (PostgreSQL 13.3) instance in private subnet  
+5. S3 bucket for file storage (IAM-based access only)  
+6. IAM roles for ECS task execution and S3 access  
+7. NAT Gateway for internet access from private subnets  
 
+---
 
-
-This setup provisions:
-
-
-
-1. A custom VPC with public and private subnets across two AZs
-2. ECS Cluster with Fargate tasks running two containers:
-3. Rails app container  (port 3000)
-4. Nginx container  as reverse proxy (port 80)
-5. Application Load Balancer (ALB) in public subnet
-6 .RDS (PostgreSQL 13.19) instance in private subnet
-7. S3 bucket for file storage (IAM-based access only)
-8 .IAM roles for ECS task execution and S3 access
-9.  NAT Gateway for internet access from private subnets
-
-
-
-
-How to Deploy the Infrastructure
-
-  Prerequisites
+## 🛠️ Prerequisites
 
 Make sure the following tools are installed and configured:
 
@@ -35,6 +26,10 @@ Make sure the following tools are installed and configured:
 2. Terraform 
 3. Docker (for building and pushing app/Nginx images to ECR)
 4 .Git (for code versioning)
+
+
+
+
 
 
  Deployment Steps
@@ -47,6 +42,10 @@ Make sure the following tools are installed and configured:
    terraform validate
    terraform plan
    terraform apply
+
+
+
+
 
 
 Configuration – terraform.tfvars
@@ -64,6 +63,9 @@ db_name     = "rorappdb"
 db_username = "roruser"
 db_password = "rorKisho312"
 These variables are customizable. Everything else (like ALB DNS, RDS endpoint, etc.) will be automatically created by Terraform and printed as output after successful deployment.
+
+
+
 
 
 
@@ -87,24 +89,26 @@ After successful deployment, Terraform returns the following:
   "subnet-0b43e4f492a7c2b52",
   "subnet-0d1e464c830863335"
 ]
-•	private_subnet_ids = [
+private_subnet_ids            = [
   "subnet-02e2303fdbf517352",
   "subnet-0330902dae74d0432"
 ]
-•	nat_gateway_ids = ["nat-01fb02bf44e1045f6"]
-•	internet_gateway_id = "igw-0819595cb33e0f129"
+nat_gateway_ids               = ["nat-01fb02bf44e1045f6"]
+internet_gateway_id           = "igw-0819595cb33e0f129"
+You can access the deployed application using the value of alb_dns_name.
 
+📝 Notes
+The Rails application listens on port 3000, while Nginx listens on port 80 and forwards traffic to the Rails container using the alias rails_app.
 
+Both containers (Rails and Nginx) run inside the same ECS Fargate task definition.
 
+The Dockerfiles for Rails and Nginx are located under the /docker folder.
 
+Terraform stores temporary files in the .terraform/ directory, which is excluded via .gitignore.
 
+Only the ALB is exposed to the internet. All other components are deployed in private subnets.
 
-1.  The Rails application listens on port 3000, while Nginx listens on port 80 and forwards traffic to the Rails container using the alias rails_app.
-2.  Both containers (Rails and Nginx) run inside the same ECS Fargate task definition.
-3.  The Dockerfiles for Rails and Nginx are located under the /docker folder.
-4. Terraform stores temporary files in .terraform/, which is excluded via .gitignore.
-5.  Only the ALB is exposed to the internet. All containers and databases are deployed in private subnets.
-6.  IAM roles are used for S3 access. No static access keys or secrets are used.
-7.  Docker images should be built and pushed to AWS ECR before running terraform apply.
+IAM roles are used for S3 access. No static access keys or secrets are used.
 
+Docker images should be built and pushed to AWS ECR before running terraform apply.
 
