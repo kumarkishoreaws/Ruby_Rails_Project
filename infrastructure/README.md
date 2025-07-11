@@ -4,7 +4,7 @@ This folder contains Terraform code to deploy the Ruby on Rails (RoR) applicatio
 
 ---
 
-## 📦 What This Setup Provisions
+##  What This Setup Provisions
 
 1. A custom VPC with public and private subnets across two AZs  
 2. ECS Cluster with Fargate tasks running two containers:  
@@ -18,14 +18,14 @@ This folder contains Terraform code to deploy the Ruby on Rails (RoR) applicatio
 
 ---
 
-## 🛠️ Prerequisites
+##  Prerequisites
 
 Make sure the following tools are installed and configured:
 
 1.AWS CLI (`aws configure`)
 2. Terraform 
 3. Docker (for building and pushing app/Nginx images to ECR)
-4 .Git (for code versioning)
+
 
 
 
@@ -35,21 +35,21 @@ Make sure the following tools are installed and configured:
  Deployment Steps
 
  Go to the infrastructure directory:
-
+  <pre>
    cd infrastructure/
    terraform  fmt
    terraform init
    terraform validate
    terraform plan
    terraform apply
+</pre>
 
 
 
-
-
+---
 
 Configuration – terraform.tfvars
-
+<pre>
 This is what we define in the terraform.tfvars file:
 project_name = "ror-app-Kisho"
 vpc_cidr     = "10.0.0.0/16"
@@ -62,17 +62,20 @@ azs = ["us-east-1a", "us-east-1b"]
 db_name     = "rorappdb"
 db_username = "roruser"
 db_password = "rorKisho312"
+
+</pre>
 These variables are customizable. Everything else (like ALB DNS, RDS endpoint, etc.) will be automatically created by Terraform and printed as output after successful deployment.
 
 
 
-
+---
 
 
 
 Terraform Outputs:
 
 After successful deployment, Terraform returns the following:
+<pre>
 •	alb_dns_name = "ror-app-Kisho-alb-2094697819.us-east-1.elb.amazonaws.com"
 •	rds_endpoint = "ror-app-kisho-postgres-db.cbk2aaak4n88.us-east-1.rds.amazonaws.com"
 •	rds_username = "roruser"
@@ -95,7 +98,11 @@ private_subnet_ids            = [
 ]
 nat_gateway_ids               = ["nat-01fb02bf44e1045f6"]
 internet_gateway_id           = "igw-0819595cb33e0f129"
+</pre>
 You can access the deployed application using the value of alb_dns_name.
+
+
+---
 
 📝 Notes
 The Rails application listens on port 3000, while Nginx listens on port 80 and forwards traffic to the Rails container using the alias rails_app.
