@@ -1,22 +1,31 @@
- Infrastructure Setup – Ruby on Rails App Deployment using Terraform on AWS
+Infrastructure Setup – Ruby on Rails App Deployment using Terraform on AWS
 
 This folder contains Terraform code to deploy the Ruby on Rails (RoR) application in AWS using ECS Fargate, Nginx as a reverse proxy, RDS for PostgreSQL, and S3 for file storage. The infrastructure is built following security best practices with private networking and IAM roles — fully automated using Terraform.
 
+
+
 What This Setup Does
+
+
 
 This setup provisions:
 
+
+
 1. A custom VPC with public and private subnets across two AZs
 2. ECS Cluster with Fargate tasks running two containers:
- 3. Rails app container  (port 3000)
- 4. Nginx container  as reverse proxy (port 80)
- 5. Application Load Balancer (ALB) in public subnet
-6 .RDS (PostgreSQL 13.3) instance in private subnet
+3. Rails app container  (port 3000)
+4. Nginx container  as reverse proxy (port 80)
+5. Application Load Balancer (ALB) in public subnet
+6 .RDS (PostgreSQL 13.19) instance in private subnet
 7. S3 bucket for file storage (IAM-based access only)
 8 .IAM roles for ECS task execution and S3 access
 9.  NAT Gateway for internet access from private subnets
 
- How to Deploy the Infrastructure
+
+
+
+How to Deploy the Infrastructure
 
   Prerequisites
 
@@ -28,9 +37,13 @@ Make sure the following tools are installed and configured:
 4 .Git (for code versioning)
 
 
+
+
+
+
  Deployment Steps
 
-1. Go to the infrastructure directory:
+ Go to the infrastructure directory:
 
    cd infrastructure/
    terraform  fmt
@@ -39,7 +52,13 @@ Make sure the following tools are installed and configured:
    terraform plan
    terraform apply
 
+
+
+
+
+
 Configuration – terraform.tfvars
+
 This is what we define in the terraform.tfvars file:
 project_name = "ror-app-Kisho"
 vpc_cidr     = "10.0.0.0/16"
@@ -53,7 +72,13 @@ db_name     = "rorappdb"
 db_username = "roruser"
 db_password = "rorKisho312"
 These variables are customizable. Everything else (like ALB DNS, RDS endpoint, etc.) will be automatically created by Terraform and printed as output after successful deployment.
- 
+
+
+
+
+
+
+
 Terraform Outputs:
 
 After successful deployment, Terraform returns the following:
@@ -79,6 +104,11 @@ After successful deployment, Terraform returns the following:
 ]
 •	nat_gateway_ids = ["nat-01fb02bf44e1045f6"]
 •	internet_gateway_id = "igw-0819595cb33e0f129"
+
+
+
+
+
 
 1.  The Rails application listens on port 3000, while Nginx listens on port 80 and forwards traffic to the Rails container using the alias rails_app.
 2.  Both containers (Rails and Nginx) run inside the same ECS Fargate task definition.
